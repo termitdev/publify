@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   DESIGN TOKENS — NOVO SISTEMA EDITORIAL
+   ============================================================ */
+@layer base {
+  :root {
+    /* Base */
+    --background: 0 0% 99%;          /* #fcfcfc */
+    --foreground: 158 100% 10%;      /* #003223 */
+
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 158 100% 10%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 158 100% 10%;
+
+    /* Primary (verde escuro) */
+    --primary: 158 100% 10%;         /* #003223 */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary (verde claro) */
+    --secondary: 72 50% 55%;         /* #bcc850 */
+    --secondary-foreground: 158 100% 10%;
+
+    /* Accent (laranja) */
+    --accent: 24 100% 50%;           /* #ff6400 */
+    --accent-foreground: 0 0% 100%;
+
+    /* Soft */
+    --muted: 30 40% 92%;             /* #f5ebe1 */
+    --muted-foreground: 0 0% 40%;
+
+    /* Destructive */
+    --destructive: 24 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders */
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 158 100% 10%;
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-soft: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);
+    --gradient-editorial: linear-gradient(135deg, #003223 0%, #001a12 100%);
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px rgba(0, 50, 35, 0.15);
+    --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  /* DARK MODE */
+  .dark {
+    --background: 158 40% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 158 40% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 158 40% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 158 60% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 72 40% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 24 100% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 158 20% 18%;
+    --muted-foreground: 0 0% 70%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 158 20% 22%;
+    --input: 158 20% 22%;
+    --ring: 24 100% 55%;
+
+    --gradient-soft: linear-gradient(180deg, #0b1f18 0%, #07130f 100%);
+    --gradient-editorial: linear-gradient(135deg, #003223 0%, #001a12 100%);
+
+    --shadow-elegant: 0 12px 40px rgba(0, 50, 35, 0.35);
+    --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar minimalista */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #fcfcfc;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 50, 35, 0.25);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #003223;
+  }
+}
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+@layer components {
+  .card-editorial {
+    @apply bg-card border border-border/50 rounded-2xl;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .btn-editorial {
+    @apply bg-accent text-accent-foreground px-4 py-2 rounded-xl text-sm;
+    @apply hover:scale-105 transition;
+  }
+
+  .btn-danger {
+    @apply bg-red-500 text-white px-4 py-2 rounded-xl text-sm;
+  }
+
+  .input-editorial {
+    @apply bg-card border-border focus:ring-primary rounded-xl;
+  }
+
+  .badge-primary {
+    @apply bg-primary/10 text-primary px-3 py-1 rounded-full text-xs;
+  }
+
+  .badge-accent {
+    @apply bg-accent/10 text-accent px-3 py-1 rounded-full text-xs;
+  }
+
+  .badge-secondary {
+    @apply bg-secondary/20 text-primary px-3 py-1 rounded-full text-xs;
+  }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+@layer utilities {
+  .bg-platform {
+    background-color: #fcfcfc;
+  }
+
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+/* ============================================================
+   VIEW TRANSITION
+   ============================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
+::view-transition-old(root) {
+  z-index: 0;
+}

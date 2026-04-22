@@ -1,0 +1,65 @@
+.marquee {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: flex;
+  flex-wrap: nowrap; /* Evita quebras no conteúdo */
+}
+
+/* Animação para modo vertical */
+.marquee.vertical .marquee-content {
+  flex-direction: column;
+  animation: scroll-vertical 30s linear infinite;
+}
+
+/* Animação para modo horizontal */
+.marquee.horizontal .marquee-content {
+  animation: scroll-horizontal 30s linear infinite;
+}
+
+/* Direção reversa */
+.marquee.reverse .marquee-content {
+  animation-direction: reverse;
+}
+
+/* Pausar ao passar o mouse */
+.marquee.pause-on-hover:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+/* Ajuste no gradiente para cor #fafafa com blur */
+.hero-marquee .marquee::before {
+  content: '';
+  position: absolute;
+  inset: -20px; /* Expande o gradiente para fora */
+  background: linear-gradient(135deg, rgba(250, 250, 250, 0.3), rgba(250, 250, 250, 0.1)); /* Gradiente com #fafafa */
+  border-radius: 24px; /* Arredondamento suave */
+  filter: blur(40px); /* Blur expandido para 40px */
+  opacity: 0.25; /* Suavidade no gradiente */
+  z-index: -1; /* Atrás do conteúdo */
+  transform: scale(1.25); /* Escala aumentada */
+  pointer-events: none; /* Evita interações */
+}
+
+/* Animações para loop infinito */
+@keyframes scroll-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

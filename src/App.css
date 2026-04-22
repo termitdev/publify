@@ -1,0 +1,91 @@
+/* ===================== */
+/* DESIGN TOKENS (CORE)  */
+/* ===================== */
+:root {
+  /* Base */
+  --background: 0 0% 99%; /* #fcfcfc */
+  --foreground: 158 100% 10%; /* #003223 */
+
+  /* Primary */
+  --primary: 158 100% 10%; /* #003223 */
+  --primary-foreground: 0 0% 100%;
+  --primary-soft: 158 30% 90%;
+  --primary-dark: 158 100% 6%;
+
+  /* Accent */
+  --accent: 24 100% 50%; /* #ff6400 */
+  --accent-foreground: 0 0% 100%;
+
+  /* Soft background */
+  --soft-background: 30 40% 92%; /* #f5ebe1 */
+
+  /* Highlight (secondary) */
+  --secondary: 72 50% 55%; /* #bcc850 */
+  --secondary-foreground: 158 100% 10%;
+
+  /* Card */
+  --card: 0 0% 100%;
+  --card-foreground: 158 100% 10%;
+
+  /* Muted */
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 40%;
+
+  /* Border / subtle */
+  --border: 0 0% 90%;
+  --subtle: 30 20% 95%;
+}
+
+/* ===================== */
+/* BASE APP (SEU CÓDIGO) */
+/* ===================== */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  /* Aplicando tema */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em hsl(var(--accent) / 0.4));
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em hsl(var(--primary) / 0.4));
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.read-the-docs {
+  color: hsl(var(--muted-foreground));
+}
