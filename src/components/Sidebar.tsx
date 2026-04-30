@@ -5,7 +5,7 @@ import {
   Calculator,
   BookOpen,
   Package,
-  Edit3,
+  CalendarDays, // ← ícone correto do lucide, não o componente de página
   Sun,
   Moon,
   LogOut,
@@ -17,6 +17,7 @@ import { useState, useRef } from "react";
 import { flushSync } from "react-dom";
 
 import logoHubEditorial from "@/assets/imgs/logotable.png";
+// ↑ Calendar NÃO é importado aqui — ele é uma página, não um ícone
 
 interface SidebarProps {
   open: boolean;
@@ -59,20 +60,20 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
   const isActive = (path: string) => location.pathname === path;
 
   const links = [
-    { label: "Painel", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Calculadora", href: "/dashboard/calculadora", icon: Calculator },
-    { label: "Referência", href: "/dashboard/referencia", icon: BookOpen },
-    { label: "Logística", href: "/dashboard/logistica", icon: Package },
+    { label: "Painel",       href: "/dashboard",            icon: LayoutDashboard },
+    { label: "Calculadora",  href: "/dashboard/calculadora", icon: Calculator      },
+    { label: "Referência",   href: "/dashboard/referencia",  icon: BookOpen        },
+    { label: "Logística",    href: "/dashboard/logistica",   icon: Package         },
+    { label: "Calendário",   href: "/dashboard/calendar",    icon: CalendarDays    }, // ← corrigido
   ];
 
   return (
     <>
-      {/* MOBILE */}
+      {/* ── MOBILE ── */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-primary text-white border-t border-white/10 backdrop-blur-xl">
         <div className="flex justify-around items-center h-16">
           {links.map((link) => {
             const active = isActive(link.href);
-
             return (
               <Link
                 key={link.href}
@@ -82,18 +83,10 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
                   active ? "text-white" : "text-white/60"
                 )}
               >
-                <div
-                  className={cn(
-                    "p-2 rounded-xl transition",
-                    active && "bg-white/10"
-                  )}
-                >
+                <div className={cn("p-2 rounded-xl transition", active && "bg-white/10")}>
                   <link.icon className="h-5 w-5" />
                 </div>
-
-                <span className="text-[9px] uppercase font-medium">
-                  {link.label}
-                </span>
+                <span className="text-[9px] uppercase font-medium">{link.label}</span>
               </Link>
             );
           })}
@@ -109,7 +102,7 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
         </div>
       </nav>
 
-      {/* DESKTOP */}
+      {/* ── DESKTOP ── */}
       <aside
         className={cn(
           "hidden md:flex fixed top-0 left-0 h-full z-40 flex-col",
@@ -129,7 +122,6 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
         <nav className="flex-1 px-3 py-6 space-y-1">
           {links.map((link) => {
             const active = isActive(link.href);
-
             return (
               <Link
                 key={link.href}
@@ -141,7 +133,7 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
                     : "text-white/60 hover:text-white hover:bg-white/10"
                 )}
               >
-                {/* Active indicator */}
+                {/* Indicador de ativo */}
                 {active && (
                   <motion.div
                     layoutId="active-indicator"
@@ -149,7 +141,7 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
                   />
                 )}
 
-                {/* Icon */}
+                {/* Ícone */}
                 <div className="flex items-center justify-center min-w-[48px]">
                   <link.icon className="h-5 w-5 transition group-hover:scale-110" />
                 </div>
@@ -168,7 +160,7 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
 
         {/* FOOTER */}
         <div className="p-3 border-t border-white/10 space-y-1">
-          {/* Theme */}
+          {/* Tema */}
           <button
             ref={themeBtnRef}
             onClick={toggleTheme}
@@ -177,7 +169,6 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
             <div className="flex items-center justify-center min-w-[48px]">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </div>
-
             <motion.span
               animate={{ opacity: open ? 1 : 0 }}
               className="text-sm whitespace-nowrap"
@@ -197,7 +188,6 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
             <div className="flex items-center justify-center min-w-[48px]">
               <LogOut className="h-5 w-5" />
             </div>
-
             <motion.span
               animate={{ opacity: open ? 1 : 0 }}
               className="text-sm whitespace-nowrap"
@@ -211,23 +201,20 @@ export const SidebarComponent = ({ open, setOpen }: SidebarProps) => {
   );
 };
 
-/* LOGO */
-
+// ── Logo ──────────────────────────────────────────────────────────────────────
 const SidebarLogo = ({ open }: { open: boolean }) => (
   <Link to="/dashboard" className="flex items-center gap-3 overflow-hidden">
     <img
       src={logoHubEditorial}
       className="h-10 w-auto object-contain brightness-0 invert"
     />
-
     <AnimatePresence>
       {open && (
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -10 }}
-        >
-        </motion.div>
+        />
       )}
     </AnimatePresence>
   </Link>

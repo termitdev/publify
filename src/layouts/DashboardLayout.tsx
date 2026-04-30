@@ -1,5 +1,5 @@
 // src/layouts/DashboardLayout.tsx
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { SidebarComponent } from "@/components/Sidebar";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
 
-// ── Design Tokens (mirrors Dashboard) ─────────────────────────
+// ── Design Tokens ──────────────────────────────────────────────
 const T = {
   primary:   '#003223',
   soft:      '#f5ebe1',
@@ -20,15 +20,21 @@ const T = {
 };
 
 interface UserProfile {
-  full_name: string | null;
-  email:     string | null;
+  full_name:  string | null;
+  email:      string | null;
   avatar_url: string | null;
 }
 
+// Rotas que devem ocupar 100% da tela (sem padding, sem topbar)
+const FULLSCREEN_ROUTES = ['/dashboard/calendar'];
+
 export default function DashboardLayout() {
+  const location                     = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDark,       setIsDark]      = useState(false);
-  const [profile,      setProfile]     = useState<UserProfile | null>(null);
+  const [isDark,       setIsDark]     = useState(false);
+  const [profile,      setProfile]    = useState<UserProfile | null>(null);
+
+  const isFullscreen = FULLSCREEN_ROUTES.some(r => location.pathname.startsWith(r));
 
   // ── Theme ──────────────────────────────────────────────────
   useEffect(() => {
@@ -63,7 +69,6 @@ export default function DashboardLayout() {
 
     fetchProfile();
 
-    // keep in sync on auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       fetchProfile();
     });
@@ -85,72 +90,84 @@ export default function DashboardLayout() {
 
       <motion.main
         className="flex-1 transition-all duration-300 ease-in-out overflow-x-hidden"
+        style={isFullscreen ? { display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '100vh' } : {}}
         animate={{ marginLeft: sidebarOpen ? 256 : 64 }}
         initial={{ marginLeft: 64 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        {/* ── Top Bar ─────────────────────────────────────── */}
-        <div
-          className="flex justify-end items-center gap-3 px-6 py-3 sticky top-0 z-30"
-          style={{
-            background:   'rgba(252,252,252,0.85)',
-            backdropFilter: 'blur(12px)',
-            borderBottom: `1px solid ${T.border}`,
-          }}
-        >
-          <ThemeToggle isDark={isDark} onToggle={handleToggleTheme} />
+        {/* ── Top Bar (oculta no modo fullscreen) ─────────── */}
+        {!isFullscreen && (
+          <div
+            className="flex justify-end items-center gap-3 px-6 py-3 sticky top-0 z-30"
+            style={{
+              background:     'rgba(252,252,252,0.85)',
+              backdropFilter: 'blur(12px)',
+              borderBottom:   `1px solid ${T.border}`,
+            }}
+          >
+            <ThemeToggle isDark={isDark} onToggle={handleToggleTheme} />
 
-          {profile && (
-            <div className="flex items-center gap-2.5 group relative">
-              {/* Avatar + name pill */}
-              <div
-                className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-colors cursor-default"
-                style={{ background: T.primaryLo }}
-              >
-                <Avatar className="h-7 w-7 rounded-lg overflow-hidden flex-shrink-0">
-                  <AvatarImage
-                    src={
-                      profile.avatar_url ||
-                      `https://api.dicebear.com/7.x/initials/svg?seed=${profile.full_name}`
-                    }
-                    className="object-cover"
-                  />
-                  <AvatarFallback
-                    className="text-[9px] font-semibold rounded-lg"
-                    style={{ background: T.soft, color: T.primary }}
-                  >
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden sm:block leading-none">
-                  <p className="text-xs font-medium" style={{ color: T.ink }}>
-                    {profile.full_name ?? "Usuário"}
-                  </p>
-                  {profile.email && (
-                    <p className="text-[9px]" style={{ color: T.muted }}>
-                      {profile.email}
+            {profile && (
+              <div className="flex items-center gap-2.5 group relative">
+                <div
+                  className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-colors cursor-default"
+                  style={{ background: T.primaryLo }}
+                >
+                  <Avatar className="h-7 w-7 rounded-lg overflow-hidden flex-shrink-0">
+                    <AvatarImage
+                      src={
+                        profile.avatar_url ||
+                        `https://api.dicebear.com/7.x/initials/svg?seed=${profile.full_name}`
+                      }
+                      className="object-cover"
+                    />
+                    <AvatarFallback
+                      className="text-[9px] font-semibold rounded-lg"
+                      style={{ background: T.soft, color: T.primary }}
+                    >
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden sm:block leading-none">
+                    <p className="text-xs font-medium" style={{ color: T.ink }}>
+                      {profile.full_name ?? "Usuário"}
                     </p>
-                  )}
+                    {profile.email && (
+                      <p className="text-[9px]" style={{ color: T.muted }}>
+                        {profile.email}
+                      </p>
+                    )}
+                  </div>
                 </div>
+
+                <button
+                  onClick={handleSignOut}
+                  className="h-8 w-8 flex items-center justify-center rounded-xl
+                    opacity-0 group-hover:opacity-100 transition-all hover:opacity-80"
+                  style={{ background: 'rgba(255,100,0,0.08)', color: '#ff6400' }}
+                  title="Sair"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
               </div>
+            )}
+          </div>
+        )}
 
-              {/* Sign out — visible on hover */}
-              <button
-                onClick={handleSignOut}
-                className="h-8 w-8 flex items-center justify-center rounded-xl
-                  opacity-0 group-hover:opacity-100 transition-all hover:opacity-80"
-                style={{ background: 'rgba(255,100,0,0.08)', color: '#ff6400' }}
-                title="Sair"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-              </button>
+        {/* ── Conteúdo ────────────────────────────────────── */}
+        {isFullscreen
+          ? (
+            // Calendário: sem padding, ocupa todo o espaço restante
+            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <Outlet />
             </div>
-          )}
-        </div>
-
-        <div className="p-4 sm:p-6 lg:p-8">
-          <Outlet />
-        </div>
+          ) : (
+            // Demais páginas: padding normal
+            <div className="p-4 sm:p-6 lg:p-8">
+              <Outlet />
+            </div>
+          )
+        }
       </motion.main>
     </div>
   );

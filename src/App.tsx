@@ -35,6 +35,7 @@ const ReferenceFormatter = lazy(() => import("./pages/Referencia"));
 const Estoque = lazy(() => import("./pages/Estoque"));
 const LogKanban = lazy(() => import("./components/LogKanban"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Calendar = lazy(() => import("./pages/Calendar"));
 
 // === FORÇA FUSO SÃO PAULO ===
 if (typeof window !== "undefined") {
@@ -172,6 +173,7 @@ const App = () => (
                     <Route path="referencia" element={<ReferenceFormatter />} />
                     <Route path="logistica" element={<LogKanban />} />
                     <Route path="estoque" element={<Estoque />} />
+                    <Route path="calendar" element={<Calendar />} />
                   </Route>
 
                   {/* 404 */}
